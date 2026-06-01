@@ -7,16 +7,21 @@ This is a minimal implementation of the CPX protocol for the ESP32, which allows
 This project was developed using ESP-IDF 5.3.3, if you don't want to install it you can download a docker container [here](https://hub.docker.com/r/bitcraze/aideck-esp).
 Start a bash console inside your docker:
 ```sh
-docker run --rm -it -v "${PWD}:/module/data/" -P --device-cgroup-rule="c 189:* rmw" -v /dev/bus:/dev/bus:ro -v /dev/serial:/dev/serial:ro --device-cgroup-rule="c 188:* rmw" -v /dev/serial:/dev/serial:ro bitcraze/aideck-esp:latest        
-/bin/bash -c "
-            source /esp/esp-idf/export.sh; \
-            cd /module/data/; \
-            bash
-        "
+docker run --rm -it \
+    -v "${PWD}:/module/data/" \
+    -P \
+    --device-cgroup-rule="c 189:* rmw" \
+    --device-cgroup-rule="c 188:* rmw" \
+    -v /dev/bus:/dev/bus:ro \
+    -v /dev/serial:/dev/serial:ro \
+    bitcraze/aideck-esp:latest \
+    /bin/bash -c "source /esp/esp-idf/export.sh; \
+        cd /module/data/; \
+        bash"
 ```
 build the ESP application
 ```shell
-> idf.py clean; idf.py menuconfig; idf.py all
+idf.py clean; idf.py menuconfig; idf.py all
 ```
 
 It is possible to set the Wi-Fi configuration inside Menuconfig. The supported options are:
@@ -27,7 +32,7 @@ In addition, `menuconfig` provides the option to configure the [mDNS](https://en
 
 Flash the code over JTAG:
 ```shell
-> openocd -f interface/ftdi/olimex-arm-usb-tiny-h.cfg -f board/esp-wroom-32.cfg -c "adapter_khz 20000"  -c 'program_esp build/partition_table/partition-table.bin 0x8000 verify' -c 'program_esp build/bootloader/bootloader.bin 0x1000 verify' -c 'program_esp build/aideck_cpx_streamer.bin 0x10000 verify reset exit'
+openocd -f interface/ftdi/olimex-arm-usb-tiny-h.cfg -f board/esp-wroom-32.cfg -c "adapter_khz 20000"  -c 'program_esp build/partition_table/partition-table.bin 0x8000 verify' -c 'program_esp build/bootloader/bootloader.bin 0x1000 verify' -c 'program_esp build/aideck_cpx_streamer.bin 0x10000 verify reset exit'
 ```
 
 ## Limitations
