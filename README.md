@@ -4,7 +4,6 @@ This is a minimal implementation of the CPX protocol for the ESP32, which allows
 
 ## Build instructions
 
-This project was developed using ESP-IDF 5.3.3, if you don't want to install it you can download a docker container [here](https://hub.docker.com/r/bitcraze/aideck-esp).
 Start a bash console inside your docker:
 ```sh
 docker run --rm -it \
