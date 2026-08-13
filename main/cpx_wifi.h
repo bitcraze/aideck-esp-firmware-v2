@@ -36,7 +36,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-/* The SSID of the AI-deck when in AP mode */
+/* Fallback SSID of the AI-deck in AP mode, used when cpx_wifi_init() is given none */
 #define WIFI_SSID "crazyflie"
 
 /* TCP and UDP local ports */

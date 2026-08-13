@@ -109,10 +109,18 @@ static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_
 }
 
 /* Initialize WiFi as AP */
-static void wifi_init_ap() {
-    const char *ssid = WIFI_SSID;
+static void wifi_init_ap(const char *ssid, const char *passwd) {
+    if (ssid == NULL || ssid[0] == '\0') {
+        ssid = WIFI_SSID;
+    }
+    const bool secured = passwd != NULL && passwd[0] != '\0';
 
-    ESP_LOGI(TAG, "Access point mode (ssid: %s)", ssid);
+    if (secured && strlen(passwd) < 8) {
+        ESP_LOGE(TAG, "Access point password must be at least 8 characters for WPA2");
+        exit(1);
+    }
+
+    ESP_LOGI(TAG, "Access point mode (ssid: %s, security: %s)", ssid, secured ? "WPA2" : "open");
 
     wifi_event_group = xEventGroupCreate();
 
@@ -128,10 +136,13 @@ static void wifi_init_ap() {
     wifi_config_t wifi_config = {
         .ap = {
             .max_connection = 1,
-            .authmode = WIFI_AUTH_OPEN
+            .authmode = secured ? WIFI_AUTH_WPA2_PSK : WIFI_AUTH_OPEN
         },
     };
     strlcpy((char *)wifi_config.ap.ssid, ssid, sizeof(wifi_config.ap.ssid));
+    if (secured) {
+        strlcpy((char *)wifi_config.ap.password, passwd, sizeof(wifi_config.ap.password));
+    }
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
@@ -561,7 +572,7 @@ void cpx_wifi_init(wifi_mode_t mode, const char *ssid, const char *key) {
     ESP_ERROR_CHECK(ret);
 
     if (WIFI_MODE_AP == mode) {
-        wifi_init_ap();
+        wifi_init_ap(ssid, key);
     } else {
         wifi_init_sta(ssid, key);
     }

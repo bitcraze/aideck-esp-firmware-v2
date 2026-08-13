@@ -5,18 +5,35 @@ menu "Streamer configuration"
         help
             Act as accesspoint as opposed to connecting to a wifi
 
+    config AP_SSID
+        string "Access-point SSID"
+        default "crazyflie"
+        depends on USE_AS_AP
+        help
+            SSID (network name) of the access-point created in AP mode.
+            Must be 1 to 32 characters -- anything else fails the build.
+
+    config AP_PASSWORD
+        string "Access-point password"
+        default ""
+        depends on USE_AS_AP
+        help
+            WPA2 password for the access-point created in AP mode.
+            Leave empty for an open network, otherwise it must be 8 to 63
+            characters -- anything else fails the build.
+
     menu "Credentials for connecting to another access-point"
+        depends on !USE_AS_AP
+
         config EXAMPLE_SSID
             string "WiFi SSID"
             default "myssid"
-            depends on !USE_AS_AP
             help
                 SSID (network name) for the example to connect to.
 
         config EXAMPLE_PASSWORD
             string "WiFi Password"
             default "mypassword"
-            depends on !USE_AS_AP
             help
                 WiFi password (WPA or WPA2) for the example to use.
     endmenu
