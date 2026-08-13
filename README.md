@@ -26,7 +26,7 @@ idf.py clean; idf.py menuconfig; idf.py all
 
 It is possible to set the Wi-Fi configuration inside Menuconfig. The supported options are:
 * Station mode (STA, preferred): the ESP32 connects to an existing Wi-Fi network for which you provide SSID and password in menuconfig (default SSID: `AI-deck-streamer`, password: `changeme`)
-* Access Point mode (AP): the ESP32 creates its own Wi-Fi network for which the SSID is provided in `wifi.h` (default SSID: `crazyflie`)
+* Access Point mode (AP): the ESP32 creates its own Wi-Fi network for which the SSID is provided in `cpx_wifi.h` (default SSID: `crazyflie`)
 
 In addition, `menuconfig` provides the option to configure the [mDNS](https://en.wikipedia.org/wiki/Multicast_DNS) hostname of the drone, which allows a computer to connect without knowning its IP. The default hostname is `aideck.local`.
 

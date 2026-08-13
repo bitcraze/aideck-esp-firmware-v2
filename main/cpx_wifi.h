@@ -1,5 +1,5 @@
 /*
- * wifi.h
+ * cpx_wifi.h
  * Elia Cereda <elia.cereda@idsia.ch>
  * Jérôme Guzzi <jerome@idsia.ch>
  * Esteban Gougeon <esteban.gougeon@greenwaves-technologies.com>
