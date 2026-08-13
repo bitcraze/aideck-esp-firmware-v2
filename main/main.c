@@ -52,8 +52,10 @@ static const char *TAG = "cpx";
 #define CONFIG_EXAMPLE_SSID CONFIG_AP_SSID
 #define CONFIG_EXAMPLE_PASSWORD CONFIG_AP_PASSWORD
 /* sizeof() a string literal counts the NUL: 1 means empty, N+1 means N characters */
-_Static_assert(sizeof(CONFIG_AP_SSID) >= 2 && sizeof(CONFIG_AP_SSID) <= 33,
-               "CONFIG_AP_SSID must be 1 to 32 characters");
+/* Capped at 31, not the 802.11 maximum of 32: the SSID is copied into a
+   32-byte field as a NUL-terminated string, so the last byte is unusable */
+_Static_assert(sizeof(CONFIG_AP_SSID) >= 2 && sizeof(CONFIG_AP_SSID) <= 32,
+               "CONFIG_AP_SSID must be 1 to 31 characters");
 _Static_assert(sizeof(CONFIG_AP_PASSWORD) == 1 || sizeof(CONFIG_AP_PASSWORD) >= 9,
                "CONFIG_AP_PASSWORD must be empty (open network) or at least 8 characters for WPA2");
 _Static_assert(sizeof(CONFIG_AP_PASSWORD) <= 64,

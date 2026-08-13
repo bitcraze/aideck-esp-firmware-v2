@@ -11,7 +11,7 @@ menu "Streamer configuration"
         depends on USE_AS_AP
         help
             SSID (network name) of the access-point created in AP mode.
-            Must be 1 to 32 characters -- anything else fails the build.
+            Must be 1 to 31 characters -- anything else fails the build.
 
     config AP_PASSWORD
         string "Access-point password"
