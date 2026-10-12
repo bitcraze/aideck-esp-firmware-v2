@@ -1,0 +1,34 @@
+# Build the firmware and merge it into a single flashable image
+
+name: Build
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build firmware
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v7
+
+    # The container runs as another user than the owner of the checkout. Without marking the
+    # directory as safe, git refuses to report the version that is built into the firmware.
+    - name: Build
+      run: docker run --rm -v ${PWD}:/module/data bitcraze/aideck-esp:0.1.0 bash -c "git config --global --add safe.directory /module/data && source /esp/esp-idf/export.sh && idf.py build"
+
+    # Bootloader, partition table and application in one image, to be flashed at offset 0x0
+    - name: Merge into a single image
+      run: docker run --rm -v ${PWD}:/module/data -w /module/data/build bitcraze/aideck-esp:0.1.0 bash -c "source /esp/esp-idf/export.sh && esptool.py --chip esp32 merge_bin -o aideck_esp_nanocockpit.bin @flash_args"
+
+    - name: Upload image
+      uses: actions/upload-artifact@v7
+      with:
+        name: aideck_esp_nanocockpit
+        path: build/aideck_esp_nanocockpit.bin
+        if-no-files-found: error
