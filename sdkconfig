@@ -392,15 +392,9 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Streamer configuration
 #
-# CONFIG_USE_AS_AP is not set
-
-#
-# Credentials for connecting to another access-point
-#
-CONFIG_EXAMPLE_SSID="AI-deck-streamer"
-CONFIG_EXAMPLE_PASSWORD="changeme"
-# end of Credentials for connecting to another access-point
-
+CONFIG_USE_AS_AP=y
+CONFIG_AP_SSID="aideck-nanocockpit"
+CONFIG_AP_PASSWORD=""
 CONFIG_ENABLE_MDNS=y
 CONFIG_MDNS_HOSTNAME="aideck"
 # CONFIG_ENABLE_UDP_TX is not set
