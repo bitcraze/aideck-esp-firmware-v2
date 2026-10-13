@@ -1,0 +1,34 @@
+# Build the firmware and upload the application binary
+
+name: Build
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build firmware
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v7
+
+    # The container runs as another user than the owner of the checkout. Without marking the
+    # directory as safe, git refuses to report the version that is built into the firmware.
+    - name: Build
+      run: docker run --rm -v ${PWD}:/module/data bitcraze/aideck-esp:0.1.0 bash -c "git config --global --add safe.directory /module/data && source /esp/esp-idf/export.sh && idf.py build"
+
+    # The application only, to be flashed at offset 0x10000.
+    - name: Name the application binary
+      run: cp build/aideck_cpx_streamer.bin aideck_esp_nanocockpit.bin
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v7
+      with:
+        name: aideck_esp_nanocockpit
+        path: aideck_esp_nanocockpit.bin
+        if-no-files-found: error

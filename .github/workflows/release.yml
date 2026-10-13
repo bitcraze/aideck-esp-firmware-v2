@@ -1,0 +1,47 @@
+# Build the firmware and create a draft GitHub release. Run it on a tag.
+
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-tag:
+    name: Check that this runs on a tag
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Fail when started on a branch
+      if: github.ref_type != 'tag'
+      run: |
+        echo "::error::Run this workflow on a tag, not on a branch"
+        exit 1
+
+  build:
+    needs: check-tag
+    uses: ./.github/workflows/build.yml
+
+  release:
+    permissions:
+      contents: write  # for softprops/action-gh-release to create a release
+    name: Create draft GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download binary
+      uses: actions/download-artifact@v8
+      with:
+        name: aideck_esp_nanocockpit
+
+    - name: Create draft release
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: ${{ github.ref_name }}
+        draft: true
+        fail_on_unmatched_files: true
+        files: aideck_esp_nanocockpit.bin

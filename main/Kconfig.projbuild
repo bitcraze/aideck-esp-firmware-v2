@@ -1,13 +1,13 @@
 menu "Streamer configuration"
     config USE_AS_AP
         bool "Act as access-point"
-        default n
+        default y
         help
             Act as accesspoint as opposed to connecting to a wifi
 
     config AP_SSID
         string "Access-point SSID"
-        default "crazyflie"
+        default "aideck-nanocockpit"
         depends on USE_AS_AP
         help
             SSID (network name) of the access-point created in AP mode.
