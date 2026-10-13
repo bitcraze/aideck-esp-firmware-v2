@@ -52,8 +52,11 @@ docker run --rm -it \
     -v /dev/bus:/dev/bus:ro \
     -v /dev/serial:/dev/serial:ro \
     bitcraze/aideck-esp:0.1.0 \
-    /bin/bash -c "source /esp/esp-idf/export.sh; cd /module/data/; bash"
+    /bin/bash -c "git config --global --add safe.directory /module/data; source /esp/esp-idf/export.sh; cd /module/data/; bash"
 ```
+
+The `git config` part lets git in the container read the repository, so that the version of the
+source code is built into the firmware.
 
 In the container, optionally change the configuration and then build:
 
