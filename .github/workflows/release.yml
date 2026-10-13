@@ -9,8 +9,19 @@ permissions:
   contents: read
 
 jobs:
+  check-tag:
+    name: Check that this runs on a tag
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Fail when started on a branch
+      if: github.ref_type != 'tag'
+      run: |
+        echo "::error::Run this workflow on a tag, not on a branch"
+        exit 1
+
   build:
-    if: github.ref_type == 'tag'
+    needs: check-tag
     uses: ./.github/workflows/build.yml
 
   release:
