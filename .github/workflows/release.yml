@@ -21,13 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download image
+    - name: Download binary
       uses: actions/download-artifact@v8
       with:
         name: aideck_esp_nanocockpit
-
-    - name: Rename image for upload
-      run: mv aideck_esp_nanocockpit.bin aideck_esp_nanocockpit-${{ github.ref_name }}.bin
 
     - name: Create draft release
       uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
@@ -36,4 +33,4 @@ jobs:
         name: ${{ github.ref_name }}
         draft: true
         fail_on_unmatched_files: true
-        files: aideck_esp_nanocockpit-${{ github.ref_name }}.bin
+        files: aideck_esp_nanocockpit.bin

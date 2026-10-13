@@ -1,4 +1,4 @@
-# Build the firmware and merge it into a single flashable image
+# Build the firmware and upload the application binary
 
 name: Build
 
@@ -22,13 +22,13 @@ jobs:
     - name: Build
       run: docker run --rm -v ${PWD}:/module/data bitcraze/aideck-esp:0.1.0 bash -c "git config --global --add safe.directory /module/data && source /esp/esp-idf/export.sh && idf.py build"
 
-    # Bootloader, partition table and application in one image, to be flashed at offset 0x0
-    - name: Merge into a single image
-      run: docker run --rm -v ${PWD}:/module/data -w /module/data/build bitcraze/aideck-esp:0.1.0 bash -c "source /esp/esp-idf/export.sh && esptool.py --chip esp32 merge_bin -o aideck_esp_nanocockpit.bin @flash_args"
+    # The application only, to be flashed at offset 0x10000.
+    - name: Name the application binary
+      run: cp build/aideck_cpx_streamer.bin aideck_esp_nanocockpit.bin
 
-    - name: Upload image
+    - name: Upload binary
       uses: actions/upload-artifact@v7
       with:
         name: aideck_esp_nanocockpit
-        path: build/aideck_esp_nanocockpit.bin
+        path: aideck_esp_nanocockpit.bin
         if-no-files-found: error
